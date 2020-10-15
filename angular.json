@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "CD4DA5Admin"
+    }
+  },
+  "defaultProject": "CD4DA5Admin",
+  "cli": {
+    "analytics": "9bc8c4cb-2f4d-4777-a730-562cd160cb81"
+  }
 }
