@@ -1,7 +1,7 @@
 import { of as observableOf, fromEvent, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FileUpload } from 'primeng/fileupload';
-import { ApiService } from '../lib/api.service';
+import { ApiService } from '../service/api-service';
 import { ActivatedRoute } from '@angular/router';
 import { Injector } from '@angular/core';
 export class BaseComponent {
