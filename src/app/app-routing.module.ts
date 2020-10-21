@@ -1,20 +1,29 @@
+import { MainComponent } from './main/main.component';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FileNotFoundComponent } from './shared/file-not-found/file-not-found.component';
+import { AuthGuard } from './lib/auth.guard';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'home' },
-  { path: 'home', component: HomeComponent},
-  //khi link là localhost:4200/home thì load home module ra, trong homemodule có các component con như detail, hone
-  { path:'login', component: LoginComponent}
+  {
+    path: '',
+    loadChildren: () => import('./main/main.module').then((m) => m.MainModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
+  {
+    path: '**',
+    component: FileNotFoundComponent,
+  }, 
 ];
-
 @NgModule({
-  imports: [FormsModule,
-    ReactiveFormsModule,RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+  ],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
-
+export class AppRoutingModule {}
