@@ -5,7 +5,8 @@ import { OrderComponent } from './order/order.component';
 import { ProductComponent } from './product/product.component';
 import { TypeComponent } from './type/type.component';
 import { SharedModule } from 'src/app/shared/shared.module';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { FileUploadModule } from 'primeng/fileupload';
 @NgModule({
   declarations: [ 
     OrderComponent,ProductComponent,TypeComponent
@@ -13,6 +14,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     SharedModule,
+    ReactiveFormsModule,
+    FileUploadModule,
     RouterModule.forChild([
       {
         path: 'order',
