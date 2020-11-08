@@ -11,6 +11,8 @@ declare var $: any;
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent extends BaseComponent implements OnInit {
+  menus:any;
+  menus1:any;
   public products: any;
   public product: any;
   public totalRecords:any;
@@ -30,12 +32,19 @@ export class ProductComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.formsearch = this.fb.group({
-      'TenSP': [''],
-      'DonGia': [''],     
+      'tensp': [''],
+      'dongia': [''],     
     });
+    this._api.get('/api/loaisp/get-category').takeUntil(this.unsubscribe).subscribe(res => {
+      this.menus = res;
+    }); 
+    this._api.get('/api/thuonghieu/get-brand').takeUntil(this.unsubscribe).subscribe(res => {
+      this.menus1 = res;
+    }); 
    
    this.search();
   }
+  
 
   loadPage(page) { 
     this._api.post('/api/sanpham/search-product',{page: page, pageSize: this.pageSize}).takeUntil(this.unsubscribe).subscribe(res => {
@@ -43,22 +52,23 @@ export class ProductComponent extends BaseComponent implements OnInit {
       this.totalRecords =  res.totalItems;
       this.pageSize = res.pageSize;
       });
+      
   } 
 
   search() { 
     this.page = 1;
     this.pageSize = 5;
-    this._api.post('/api/sanpham/search-product',{page: this.page, pageSize: this.pageSize, TenSP: this.formsearch.get('TenSP').value}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/sanpham/search-product',{page: this.page, pageSize: this.pageSize, tensp: this.formsearch.get('tensp').value}).takeUntil(this.unsubscribe).subscribe(res => {
       this.products = res.data;
       this.totalRecords =  res.totalItems;
       this.pageSize = res.pageSize;
       });
   }
 
-
+  
 
   get f() { return this.formdata.controls; }
-
+//form này lúc ấn submit thôi
   onSubmit(value) {
     this.submitted = true;
     if (this.formdata.invalid) {
@@ -68,14 +78,15 @@ export class ProductComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-          Anh:data_image,
-          TenSP:value.TenSP,
-          XuatXu:value.XuatXu,
-          MoTa:value.MoTa,
-          DonGia:value.DonGia,
-          SoLuong:value.SoLuong,
-          MaLoai:value.MaLoai,
-           MaThuongHieu:value.MaThuongHieu 
+           anh:data_image,
+           masp:value.masp,
+           tensp:value.tensp,
+           maloai:value.maloai,
+           mathuonghieu:value.mathuonghieu,
+           mota:value.mota,
+           xuatxu:value.xuatxu,
+           soluong:Number.parseInt(value.soluong),
+           dongia: +value.dongia,           
           };
         this._api.post('/api/sanpham/create-product',tmp).takeUntil(this.unsubscribe).subscribe(res => {
           alert('Thêm thành công');
@@ -87,15 +98,15 @@ export class ProductComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-           Anh:data_image,
-           TenSP:value.TenSP,
-           XuatXu:value.XuatXu,
-           MoTa:value.MoTa,
-           DonGia:value.DonGia,
-           SoLuong:value.SoLuong,
-           MaLoai:value.MaLoai,
-            MaThuongHieu:value.MaThuongHieu     ,
-            MaSP:this.product.MaSP,     
+          anh:data_image,
+          tensp:value.tensp,
+          maloai:value.maloai,
+          mathuonghieu:value.mathuonghieu,
+          mota:value.mota,
+          xuatxu:value.xuatxu,
+          soluong:Number.parseInt(value.soluong),
+          dongia: +value.dongia, 
+          masp:this.product.masp,          
           };
         this._api.post('/api/sanpham/update-product',tmp).takeUntil(this.unsubscribe).subscribe(res => {
           alert('Cập nhật thành công');
@@ -108,7 +119,7 @@ export class ProductComponent extends BaseComponent implements OnInit {
   } 
 
   onDelete(row) { 
-    this._api.post('/api/sanpham/delete-product',{MaSP:row.maSP}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/sanpham/delete-product',{masp:row.masp}).takeUntil(this.unsubscribe).subscribe(res => {
       alert('Xóa thành công');
       this.search(); 
       });
@@ -117,15 +128,19 @@ export class ProductComponent extends BaseComponent implements OnInit {
   Reset() {  
     this.product = null;
     this.formdata = this.fb.group({
-      'TenSP': ['', Validators.required],
-        'XuatXu': ['', Validators.required],
-        'MoTa': ['', Validators.required],
-        'DonGia': ['', Validators.required],
-        'SoLuong':['', Validators.required],
-        'MaLoai': ['', Validators.required],
-        'MaThuongHieu': ['', Validators.required],
+      'tensp': ['', Validators.required],
+      'masp': ['', Validators.required],
+      'xuatxu': ['', Validators.required],
+      'mota': ['', Validators.required],
+      'maloai': ['',Validators.required,],
+      'mathuonghieu': ['', Validators.required],
+      'dongia': ['', [Validators.required]],
+      'soluong': ['', Validators.required],
+    }, {
+    
     }); 
   }
+// đây này lúc khởi tao form thêm không có trường id nên nó k nhận ra là đúng rồi
 
   createModal() {
     this.doneSetupForm = false;
@@ -135,15 +150,20 @@ export class ProductComponent extends BaseComponent implements OnInit {
     setTimeout(() => {
       $('#createUserModal').modal('toggle');
       this.formdata = this.fb.group({
-        'TenSP': ['', Validators.required],
-        'XuatXu': ['', Validators.required],
-        'MoTa': ['', Validators.required],
-        'DonGia': ['', Validators.required],
-        'SoLuong':['', Validators.required],
-        'MaLoai': ['', Validators.required],
-        'MaThuongHieu': ['', Validators.required],
+      'tensp': [],
+      'masp': ['',Validators.required],
+      'xuatxu': ['',Validators.required],
+      'mota': ['',Validators.required],
+      'maloai': ['',Validators.required],
+      'mathuonghieu': ['', Validators.required],
+      'dongia': ['', Validators.required],
+      'soluong': ['', Validators.required],
+
+      }, {
+        
       });
       
+      this.doneSetupForm = true;
     });
   }
 
@@ -153,17 +173,19 @@ export class ProductComponent extends BaseComponent implements OnInit {
     this.isCreate = false;
     setTimeout(() => {
       $('#createUserModal').modal('toggle');
-      this._api.get('/api/sanpham/sp-get-by-id/'+ row.MaSP).takeUntil(this.unsubscribe).subscribe((res:any) => {
+      this._api.get('/api/sanpham/get-by-id/'+ row.masp).takeUntil(this.unsubscribe).subscribe((res:any) => {
         this.product = res; 
+        
           this.formdata = this.fb.group({
-            'TenSP': ['', Validators.required],
-        'XuatXu': ['', Validators.required],
-        'MoTa': ['', Validators.required],
-        'DonGia': ['', Validators.required],
-        'SoLuong':['', Validators.required],
-        'MaLoai': ['', Validators.required],
-        'MaThuongHieu': ['', Validators.required],
-
+            'tensp': [this.product.tensp,Validators.required],
+            'xuatxu': [this.product.xuatxu,Validators.required],
+            'mota': [this.product.mota,Validators.required],
+            'maloai': [this.product.maloai,Validators.required],
+            'mathuonghieu': [this.product.mathuonghieu,Validators.required],
+            'dongia': [this.product.dongia, Validators.required],
+            'soluong': [this.product.soluong, Validators.required],
+          }, {
+            
           }); 
           this.doneSetupForm = true;
         }); 

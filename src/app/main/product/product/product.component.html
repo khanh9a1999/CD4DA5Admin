@@ -1,3 +1,4 @@
+<div style="overflow-x:hidden;">
 <div class="breadcrumbs" id="breadcrumbs">
   <ul class="breadcrumb">
     <li>
@@ -21,15 +22,15 @@
     <p-panel header="Tìm kiếm" [style]="{'margin-top': '2px'}">
       <form class="form-horizontal"  [formGroup]="formsearch"  (ngSubmit)="search()">
         <div class="form-group">
-          <label class="col-sm-1 control-label no-padding-right">Tên sp</label>
+          <label class="col-sm-1 control-label no-padding-right">Tên Sản Phẩm</label>
           <div class="col-sm-11">
-            <input formControlName="TenSP"  type="text" placeholder="Tên sản phẩm" />
+            <input formControlName="tensp"  type="text" placeholder="Tên sản phẩm" />
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-1 control-label no-padding-right">Giá sp</label>
+          <label class="col-sm-1 control-label no-padding-right">Giá Sản Phẩm</label>
           <div class="col-sm-11">
-            <input formControlName="DonGia"  type="text" placeholder="Đơn Giá" />
+            <input formControlName="dongia"  type="text" placeholder="Đơn Giá" />
           </div>
         </div>
         <div class="form-group">
@@ -56,12 +57,12 @@
       <ng-template pTemplate="body" let-item  let-i="rowIndex">
         <tr>
           <td style="width: 100px; text-align: center;">{{ i + 1 }}</td>
-          <td>{{ item.tenSP }}</td>
-          <td><img style="width:70px;" src="/assets/{{item.anh}}"/></td>
-          <td>{{ item.xuatXu }}</td>
-          <td>{{ item.moTa }}</td>
-          <td>{{ item.donGia }}</td>
-          <td>{{ item.soLuong }}</td>
+          <td>{{ item.tensp }}</td>
+          <td><img style="width:150px;" src="/assets/{{item.anh}}"/></td>
+          <td>{{ item.xuatxu }}</td>
+          <td>{{ item.mota }}</td>
+          <td>{{ item.dongia | currency:"VND"}}</td>
+          <td>{{ item.soluong }}</td>
           <td class="action-col" >
             <div class="btn-group">
               <button title="" class="btn btn-xs btn-white btn-default"  (click)="openUpdateModal(item)">  
@@ -84,102 +85,109 @@
 </div>
 <!-- /.row -->
 <div *ngIf="showUpdateModal" id="createUserModal" class="modal fade">
-    <div class="modal-dialog modal-lg full-height-modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4  *ngIf="isCreate" class="modal-title">Nhập thông tin sản phẩm</h4>
-          <h4 *ngIf="!isCreate" class="modal-title">Sửa thông tin sản phẩm</h4>
-        </div>
-        <form *ngIf="doneSetupForm" [formGroup]="formdata"  (ngSubmit)="onSubmit(formdata.value)" class="form-horizontal utehy-form">
-          <div class="modal-body no-padding">
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right"> Tên sản phẩm(<span style="color: red;">*</span>)</label>
-              <div class="col-sm-5">
-                <input type="text" placeholder="Tên sản phẩm" formControlName="product_name"/>
-                
-                  
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right">Danh mục(<span style="color: red;">*</span>)</label>
-              <div class="col-sm-5">
-                <input type="text" formControlName="category_id" placeholder="Danh mục" />
-                <div *ngIf="submitted && f.category_id.errors" class="invalid-feedback">
-                  <div *ngIf="f.category_id.errors.required">Danh mục là bắt buộc</div>
-              </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right">Thương hiệu(<span style="color: red;">*</span>)</label>
-              <div class="col-sm-5">
-                <input type="text" formControlName="brand_id" placeholder="Danh mục" />
-                <div *ngIf="submitted && f.brand_id.errors" class="invalid-feedback">
-                  <div *ngIf="f.brand_id.errors.required">Danh mục là bắt buộc</div>
-              </div>
-              </div>
-            </div>
-
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right"> Mô tả</label>
-              <div class="col-sm-10">
-                <input type="text" formControlName="product_desc" placeholder="Mô tả" />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right"> Nội dung</label>
-              <div class="col-sm-10">
-                <input type="text" formControlName="product_content" placeholder="Nội dung" />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right">Trạng thái</label>
-              <div class="col-sm-10">
-                <input type="text" formControlName="product_status" placeholder="Trạng thái" />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right">Đơn giá</label>
-              <div class="col-sm-10">
-                <input type="text" formControlName="product_price" placeholder="Đơn giá" />
-              </div>
-            </div>
-
-
-
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right"> Ảnh</label>
-              <div class="col-sm-10">
-                <p-fileUpload #file_image mode="advanced" [showUploadButton]="false" cancelLabel="Hủy" chooseLabel ="Chọn ảnh"   multiple="false" accept="image/*" maxFileSize="1000000">
-                    <ng-template pTemplate="content">
-                        <img *ngIf="product && product.product_image" style="height: 100px;width: 100px;" [src]="product.product_image">
-                    </ng-template>
-              </p-fileUpload>
-              </div>
-            </div>
-
-           
-           
-        
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default btn-sm" (click)="Reset()">
-            <i class="fa fa-bell"></i> Làm mới
-          </button>
-          <button type="submit" class="btn btn-success btn-sm btn-submit">
-            <i class="fa fa-save"></i> Đồng ý
-          </button>
-          <button type="button" class="btn btn-default btn-sm" (click)="closeModal()">
-            <i class="fa fa-times"></i> Đóng lại
-          </button>
-        </div>
-      </form>  
+  <div class="modal-dialog modal-lg full-height-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4  *ngIf="isCreate" class="modal-title">Nhập thông tin sản phẩm</h4>
+        <h4 *ngIf="!isCreate" class="modal-title">Sửa thông tin sản phẩm</h4>
       </div>
+      <form *ngIf="doneSetupForm" [formGroup]="formdata"  (ngSubmit)="onSubmit(formdata.value)" class="form-horizontal utehy-form">
+        <div class="modal-body no-padding">
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"> Tên sản phẩm(<span style="color: red;">*</span>)</label>
+            <div class="col-sm-5">
+              <input type="text" placeholder="Tên sản phẩm" formControlName="tensp"/>
+              
+                
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"> Mã sản phẩm</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="masp" placeholder="Mã Sản Phẩm" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">Danh mục(<span style="color: red;">*</span>)</label>
+            <div class="col-sm-10">
+              <select style="width: 100%;"  class="custom-select" formControlName="maloai" placeholder="Danh mục">
+                <option *ngFor="let mn of menus" value="{{mn.maloai}}">{{mn.tenloai}}</option>
+              </select>
+              
+              
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">Thương hiệu(<span style="color: red;">*</span>)</label>
+            <div class="col-sm-10">
+              <select style="width: 100%;"  class="custom-select" formControlName="mathuonghieu" placeholder="Danh mục">
+                <option *ngFor="let mn of menus1" value="{{mn.mathuonghieu}}">{{mn.tenthuonghieu}}</option>
+              </select>
+              
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"> Mô tả</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="mota" placeholder="Mô tả" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"> Xuất xứ</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="xuatxu" placeholder="Xuất xứ" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">Số Lượng</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="soluong" placeholder="Số Lượng" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">Đơn giá</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="dongia" placeholder="Đơn giá" />
+            </div>
+          </div>
+
+
+
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"> Ảnh</label>
+            <div class="col-sm-10">
+              <p-fileUpload #file_image mode="advanced" [showUploadButton]="false" cancelLabel="Hủy" chooseLabel ="Chọn ảnh"   multiple="false" accept="image/*" maxFileSize="1000000">
+                  <ng-template pTemplate="content">
+                      <img *ngIf="product && product.anh" style="height: 100px;width: 100px;" [src]="product.anh">
+                  </ng-template>
+            </p-fileUpload>
+            </div>
+          </div>
+
+         
+         
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-sm" (click)="Reset()">
+          <i class="fa fa-bell"></i> Làm mới
+        </button>
+        <button type="submit" class="btn btn-success btn-sm btn-submit">
+          <i class="fa fa-save"></i> Đồng ý
+        </button>
+        <button type="button" class="btn btn-default btn-sm" (click)="closeModal()">
+          <i class="fa fa-times"></i> Đóng lại
+        </button>
+      </div>
+    </form>  
     </div>
   </div>
+</div>
+</div>

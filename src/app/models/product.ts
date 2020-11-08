@@ -1,9 +1,10 @@
 export class Product {
-    TenSP: string;
-    XuatXu: string;
-    MoTa: string;
-    SoLuong: number;
-    DonGia:number;
-    MaLoai:string;
-    MaThuongHieu:string;
+    tensp: string;
+    xuatxu: string;
+    masp: string;
+    mota: string;
+    soluong: number;
+    dongia:number;
+    maloai:string;
+    mathuonghieu:string;
 }
