@@ -6,14 +6,14 @@ import 'rxjs/add/operator/takeUntil';
 declare var $: any;
 
 @Component({
-  selector: 'app-type',
-  templateUrl: './type.component.html',
-  styleUrls: ['./type.component.css']
+  selector: 'app-brand',
+  templateUrl: './brand.component.html',
+  styleUrls: ['./brand.component.css']
 })
-export class TypeComponent extends BaseComponent implements OnInit {
+export class BrandComponent extends BaseComponent implements OnInit {
 
-  public categorys: any;
-  public category: any;
+  public brands: any;
+  public brand: any;
   public totalRecords:any;
   public pageSize = 3;
   public page = 1;
@@ -32,7 +32,7 @@ export class TypeComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.formsearch = this.fb.group({
-      'tenloai': [''],
+      'tenthuonghieu': [''],
     });
     
    
@@ -40,8 +40,8 @@ export class TypeComponent extends BaseComponent implements OnInit {
   }
 
   loadPage(page) { 
-    this._api.post('/api/loaisp/search-category',{page: page, pageSize: this.pageSize}).takeUntil(this.unsubscribe).subscribe(res => {
-      this.categorys = res.data;
+    this._api.post('/api/thuonghieu/search-brand',{page: page, pageSize: this.pageSize}).takeUntil(this.unsubscribe).subscribe(res => {
+      this.brands = res.data;
       this.totalRecords =  res.totalItems;
       this.pageSize = res.pageSize;
       });
@@ -50,8 +50,8 @@ export class TypeComponent extends BaseComponent implements OnInit {
   search() { 
     this.page = 1;
     this.pageSize = 5;
-    this._api.post('/api/loaisp/search-category',{page: this.page, pageSize: this.pageSize, tenloai: this.formsearch.get('tenloai').value}).takeUntil(this.unsubscribe).subscribe(res => {
-      this.categorys = res.data;
+    this._api.post('/api/thuonghieu/search-brand',{page: this.page, pageSize: this.pageSize, tenthuonghieu: this.formsearch.get('tenthuonghieu').value}).takeUntil(this.unsubscribe).subscribe(res => {
+      this.brands = res.data;
       this.totalRecords =  res.totalItems;
       this.pageSize = res.pageSize;
       });
@@ -70,11 +70,12 @@ export class TypeComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-            parent_maloai:this.parent,
-            tenloai:value.tenloai,
+            parent_mathuonghieu:this.parent,
+            tenthuonghieu:value.tenthuonghieu,
+            mota:value.mota,
                  
           };
-        this._api.post('/api/loaisp/create-category',tmp).takeUntil(this.unsubscribe).subscribe(res => {
+        this._api.post('/api/thuonghieu/create-brand',tmp).takeUntil(this.unsubscribe).subscribe(res => {
           alert('Thêm thành công');
           this.search();
           this.closeModal();
@@ -84,10 +85,11 @@ export class TypeComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-          tenloai:value.tenloai,
-           maloai:this.category.maloai,          
+          tenthuonghieu:value.tenthuonghieu,
+          mota:value.mota,
+           mathuonghieu:this.brand.mathuonghieu,          
           };
-        this._api.post('/api/loaisp/update-category',tmp).takeUntil(this.unsubscribe).subscribe(res => {
+        this._api.post('/api/thuonghieu/update-brand',tmp).takeUntil(this.unsubscribe).subscribe(res => {
           alert('Cập nhật thành công');
           this.search();
           this.closeModal();
@@ -98,16 +100,17 @@ export class TypeComponent extends BaseComponent implements OnInit {
   } 
 
   onDelete(row) { 
-    this._api.post('/api/loaisp/delete-category',{maloai:row.maloai}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/thuonghieu/delete-brand',{mathuonghieu:row.mathuonghieu}).takeUntil(this.unsubscribe).subscribe(res => {
       alert('Xóa thành công');
       this.search(); 
       });
   }
 
   Reset() {  
-    this.category = null;
+    this.brand = null;
     this.formdata = this.fb.group({
-      'tenloai': ['', Validators.required],
+      'tenthuonghieu': ['', Validators.required],
+      'mota': ['', Validators.required],
    
     }, {
     
@@ -118,11 +121,12 @@ export class TypeComponent extends BaseComponent implements OnInit {
     this.doneSetupForm = false;
     this.showUpdateModal = true;
     this.isCreate = true;
-    this.category = null;
+    this.brand = null;
     setTimeout(() => {
       $('#createUserModal').modal('toggle');
       this.formdata = this.fb.group({
-      'tenloai': ['',Validators.required],
+      'tenthuonghieu': ['',Validators.required],
+      'mota': ['',Validators.required],
 
 
       }, {
@@ -139,12 +143,12 @@ export class TypeComponent extends BaseComponent implements OnInit {
     this.isCreate = false;
     setTimeout(() => {
       $('#createUserModal').modal('toggle');
-      this._api.get('/api/loaisp/get-by-id/'+ row.maloai).takeUntil(this.unsubscribe).subscribe((res:any) => {
-        this.category = res; 
+      this._api.get('/api/thuonghieu/get-by-id/'+ row.mathuonghieu).takeUntil(this.unsubscribe).subscribe((res:any) => {
+        this.brand = res; 
         
           this.formdata = this.fb.group({
-            'tenloai': [this.category.tenloai,Validators.required],
-            
+            'tenthuonghieu': [this.brand.tenthuonghieu, Validators.required],
+            'mota': [this.brand.mota, Validators.required],
           }, {
             
           }); 
@@ -157,3 +161,4 @@ export class TypeComponent extends BaseComponent implements OnInit {
     $('#createUserModal').closest('.modal').modal('hide');
   }
 }
+

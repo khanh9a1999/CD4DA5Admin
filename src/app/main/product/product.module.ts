@@ -7,9 +7,10 @@ import { TypeComponent } from './type/type.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
+import { BrandComponent } from './brand/brand.component';
 @NgModule({
   declarations: [ 
-    OrderComponent,ProductComponent,TypeComponent
+    OrderComponent,ProductComponent,TypeComponent, BrandComponent
   ],
   imports: [
     CommonModule,
@@ -28,6 +29,10 @@ import { FileUploadModule } from 'primeng/fileupload';
       {
         path: 'type',
         component: TypeComponent,
+      },
+      {
+        path: 'brand',
+        component: BrandComponent,
       },
   ]),  
   ]
