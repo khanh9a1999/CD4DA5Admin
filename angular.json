@@ -11,6 +11,13 @@
       "prefix": "app",
       "architect": {
         "build": {
+          "assets": [
+            {
+              "glob": "**/*",
+              "input": "./node_modules/ckeditor/",
+              "output": "/assets/ckeditor/"
+            }
+        ],
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/CD4DA5Admin",

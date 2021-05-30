@@ -112,7 +112,7 @@ export class UserComponent extends BaseComponent implements OnInit {
           });
       });
     }
-   
+  
   } 
 
   onDelete(row) { 

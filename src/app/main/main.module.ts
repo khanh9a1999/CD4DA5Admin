@@ -36,9 +36,9 @@ export const mainRoutes: Routes = [
         data: { roles: [Role.Admin] },
       },
       {
-        path: 'product',
+        path: 'bangtin',
         loadChildren: () =>
-          import('./product/product.module').then((m) => m.ProductModule),
+          import('./bangtin/bangtin.module').then((m) => m.BangTinModule),
         canActivate: [RoleGuard],
         data: { roles: [Role.Admin, Role.User] },
       },

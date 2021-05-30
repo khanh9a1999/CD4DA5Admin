@@ -13,9 +13,11 @@ export class BaseComponent {
    public unsubscribe = new Subject();
    public _api: ApiService;
    public _route: ActivatedRoute;
+   public date : any;
    constructor(injector: Injector) { 
           this.today = new Date();
           this.dateFormat = "dd/mm/yy";
+          // this.date = this.today.getFullYear()+'-'+(this.today.getMonth()+1)+'-'+this.today.getDate();
           this.genders =  [
             {label:'Nam',value:'Nam'},
             {label:'Nữ',value:'Nữ'},
